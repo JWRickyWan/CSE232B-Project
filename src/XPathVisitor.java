@@ -30,12 +30,6 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDoc(XPathParser.DocContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link XPathParser#filename}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFilename(XPathParser.FilenameContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code all}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
@@ -50,19 +44,19 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParentDirectory(XPathParser.ParentDirectoryContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code SequenceOfPaths}
-	 * labeled alternative in {@link XPathParser#relativePath}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code textFunction}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTextFunction(XPathParser.TextFunctionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code sequenceOfPaths}
+	 * labeled alternative in {@link XPathParser#relativePath}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code self}
 	 * labeled alternative in {@link XPathParser#relativePath}.
@@ -78,6 +72,13 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPathWithFilter(XPathParser.PathWithFilterContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code relativePathChildren}
+	 * labeled alternative in {@link XPathParser#relativePath}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelativePathChildren(XPathParser.RelativePathChildrenContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code tag}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
@@ -92,7 +93,7 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAttribute(XPathParser.AttributeContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code PathInParenthesis}
+	 * Visit a parse tree produced by the {@code pathInParenthesis}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -106,31 +107,12 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link XPathParser#attName}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAttName(XPathParser.AttNameContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link XPathParser#tagName}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTagName(XPathParser.TagNameContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PathValueEqual}
+	 * Visit a parse tree produced by the {@code notFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPathValueEqual(XPathParser.PathValueEqualContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PathIdEqual}
-	 * labeled alternative in {@link XPathParser#pathFilter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPathIdEqual(XPathParser.PathIdEqualContext ctx);
+	T visitNotFilter(XPathParser.NotFilterContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code firstFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
@@ -139,12 +121,12 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFirstFilter(XPathParser.FirstFilterContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code NotFilter}
+	 * Visit a parse tree produced by the {@code pathValueEqual}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNotFilter(XPathParser.NotFilterContext ctx);
+	T visitPathValueEqual(XPathParser.PathValueEqualContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code andpathFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
@@ -159,4 +141,11 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitOrpathFilter(XPathParser.OrpathFilterContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code pathIdEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPathIdEqual(XPathParser.PathIdEqualContext ctx);
 }

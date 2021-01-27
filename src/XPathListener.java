@@ -41,16 +41,6 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitDoc(XPathParser.DocContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPathParser#filename}.
-	 * @param ctx the parse tree
-	 */
-	void enterFilename(XPathParser.FilenameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPathParser#filename}.
-	 * @param ctx the parse tree
-	 */
-	void exitFilename(XPathParser.FilenameContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code all}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
@@ -75,18 +65,6 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitParentDirectory(XPathParser.ParentDirectoryContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code SequenceOfPaths}
-	 * labeled alternative in {@link XPathParser#relativePath}.
-	 * @param ctx the parse tree
-	 */
-	void enterSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code SequenceOfPaths}
-	 * labeled alternative in {@link XPathParser#relativePath}.
-	 * @param ctx the parse tree
-	 */
-	void exitSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code textFunction}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
@@ -98,6 +76,18 @@ public interface XPathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTextFunction(XPathParser.TextFunctionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code sequenceOfPaths}
+	 * labeled alternative in {@link XPathParser#relativePath}.
+	 * @param ctx the parse tree
+	 */
+	void enterSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code sequenceOfPaths}
+	 * labeled alternative in {@link XPathParser#relativePath}.
+	 * @param ctx the parse tree
+	 */
+	void exitSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code self}
 	 * labeled alternative in {@link XPathParser#relativePath}.
@@ -123,6 +113,18 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitPathWithFilter(XPathParser.PathWithFilterContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code relativePathChildren}
+	 * labeled alternative in {@link XPathParser#relativePath}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelativePathChildren(XPathParser.RelativePathChildrenContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code relativePathChildren}
+	 * labeled alternative in {@link XPathParser#relativePath}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelativePathChildren(XPathParser.RelativePathChildrenContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code tag}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
@@ -147,13 +149,13 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitAttribute(XPathParser.AttributeContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code PathInParenthesis}
+	 * Enter a parse tree produced by the {@code pathInParenthesis}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
 	 */
 	void enterPathInParenthesis(XPathParser.PathInParenthesisContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code PathInParenthesis}
+	 * Exit a parse tree produced by the {@code pathInParenthesis}
 	 * labeled alternative in {@link XPathParser#relativePath}.
 	 * @param ctx the parse tree
 	 */
@@ -171,49 +173,17 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link XPathParser#attName}.
-	 * @param ctx the parse tree
-	 */
-	void enterAttName(XPathParser.AttNameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPathParser#attName}.
-	 * @param ctx the parse tree
-	 */
-	void exitAttName(XPathParser.AttNameContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPathParser#tagName}.
-	 * @param ctx the parse tree
-	 */
-	void enterTagName(XPathParser.TagNameContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPathParser#tagName}.
-	 * @param ctx the parse tree
-	 */
-	void exitTagName(XPathParser.TagNameContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code PathValueEqual}
+	 * Enter a parse tree produced by the {@code notFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
 	 */
-	void enterPathValueEqual(XPathParser.PathValueEqualContext ctx);
+	void enterNotFilter(XPathParser.NotFilterContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code PathValueEqual}
+	 * Exit a parse tree produced by the {@code notFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
 	 */
-	void exitPathValueEqual(XPathParser.PathValueEqualContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code PathIdEqual}
-	 * labeled alternative in {@link XPathParser#pathFilter}.
-	 * @param ctx the parse tree
-	 */
-	void enterPathIdEqual(XPathParser.PathIdEqualContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code PathIdEqual}
-	 * labeled alternative in {@link XPathParser#pathFilter}.
-	 * @param ctx the parse tree
-	 */
-	void exitPathIdEqual(XPathParser.PathIdEqualContext ctx);
+	void exitNotFilter(XPathParser.NotFilterContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code firstFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
@@ -227,17 +197,17 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitFirstFilter(XPathParser.FirstFilterContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code NotFilter}
+	 * Enter a parse tree produced by the {@code pathValueEqual}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
 	 */
-	void enterNotFilter(XPathParser.NotFilterContext ctx);
+	void enterPathValueEqual(XPathParser.PathValueEqualContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code NotFilter}
+	 * Exit a parse tree produced by the {@code pathValueEqual}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
 	 */
-	void exitNotFilter(XPathParser.NotFilterContext ctx);
+	void exitPathValueEqual(XPathParser.PathValueEqualContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code andpathFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
@@ -262,4 +232,16 @@ public interface XPathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOrpathFilter(XPathParser.OrpathFilterContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code pathIdEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterPathIdEqual(XPathParser.PathIdEqualContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pathIdEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitPathIdEqual(XPathParser.PathIdEqualContext ctx);
 }

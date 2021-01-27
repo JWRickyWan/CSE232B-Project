@@ -8,36 +8,33 @@ absolutePath:
 SLASH:'/';
 DOUBLESLASH: '//';
 
-doc: 'doc("'filename'")';
-filename:FILE;
+doc: 'doc("'FILE'")';
 
 relativePath:
-             tagName        #tag
+             NAME        #tag
              |ASTRID         #all
              |DOT            #self
              |DDOT           #parentDirectory
              |TEXTFUNC       #textFunction
-             |'@'attName     #attribute
-             |'('relativePath')' #PathInParenthesis
-             |relativePath SLASH relativePath #self
+             |'@'NAME     #attribute
+             |'('relativePath')' #pathInParenthesis
+             |relativePath SLASH relativePath #relativePathChildren
              |DOUBLESLASH relativePath #selfOrdescendentPath
              |relativePath'['pathFilter']'  #pathWithFilter
-             |relativePath','relativePath   #SequenceOfPaths
+             |relativePath','relativePath   #sequenceOfPaths
              ;
 ASTRID:'*';
 DOT:'.';
 DDOT:'..';
 TEXTFUNC:'text()';
-attName:NAME;
-tagName:NAME;
 
 pathFilter:relativePath
-           relativePath EQUAL relativePath  #PathValueEqual
-           |relativePath IDEQUAL relativePath    #PathIdEqual
+           relativePath EQUAL relativePath  #pathValueEqual
+           |relativePath IDEQUAL relativePath    #pathIdEqual
            |'('pathFilter')'     #firstFilter
            |pathFilter 'and' pathFilter   #andpathFilter
            |pathFilter 'or' pathFilter      #orpathFilter
-           |NOT pathFilter       #NotFilter
+           |NOT pathFilter       #notFilter
            ;
 NOT: 'not';
 EQUAL: '='|'eq';

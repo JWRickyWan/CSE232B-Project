@@ -20,12 +20,10 @@ public class XPathParser extends Parser {
 		T__9=10, NAME=11, FILE=12, SLASH=13, DOUBLESLASH=14, ASTRID=15, DOT=16, 
 		DDOT=17, TEXTFUNC=18, NOT=19, EQUAL=20, IDEQUAL=21;
 	public static final int
-		RULE_absolutePath = 0, RULE_doc = 1, RULE_filename = 2, RULE_relativePath = 3, 
-		RULE_attName = 4, RULE_tagName = 5, RULE_pathFilter = 6;
+		RULE_absolutePath = 0, RULE_doc = 1, RULE_relativePath = 2, RULE_pathFilter = 3;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"absolutePath", "doc", "filename", "relativePath", "attName", "tagName", 
-			"pathFilter"
+			"absolutePath", "doc", "relativePath", "pathFilter"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -158,18 +156,18 @@ public class XPathParser extends Parser {
 		AbsolutePathContext _localctx = new AbsolutePathContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_absolutePath);
 		try {
-			setState(22);
+			setState(16);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				_localctx = new AbsolutePathChildContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(14);
+				setState(8);
 				doc();
-				setState(15);
+				setState(9);
 				match(SLASH);
-				setState(16);
+				setState(10);
 				relativePath(0);
 				}
 				break;
@@ -177,11 +175,11 @@ public class XPathParser extends Parser {
 				_localctx = new DescendentAbsolutePathContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(18);
+				setState(12);
 				doc();
-				setState(19);
+				setState(13);
 				match(DOUBLESLASH);
-				setState(20);
+				setState(14);
 				relativePath(0);
 				}
 				break;
@@ -199,9 +197,7 @@ public class XPathParser extends Parser {
 	}
 
 	public static class DocContext extends ParserRuleContext {
-		public FilenameContext filename() {
-			return getRuleContext(FilenameContext.class,0);
-		}
+		public TerminalNode FILE() { return getToken(XPathParser.FILE, 0); }
 		public DocContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -227,54 +223,12 @@ public class XPathParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(24);
+			setState(18);
 			match(T__0);
-			setState(25);
-			filename();
-			setState(26);
-			match(T__1);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class FilenameContext extends ParserRuleContext {
-		public TerminalNode FILE() { return getToken(XPathParser.FILE, 0); }
-		public FilenameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_filename; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterFilename(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitFilename(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitFilename(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final FilenameContext filename() throws RecognitionException {
-		FilenameContext _localctx = new FilenameContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_filename);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(28);
+			setState(19);
 			match(FILE);
+			setState(20);
+			match(T__1);
 			}
 		}
 		catch (RecognitionException re) {
@@ -333,6 +287,23 @@ public class XPathParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class TextFunctionContext extends RelativePathContext {
+		public TerminalNode TEXTFUNC() { return getToken(XPathParser.TEXTFUNC, 0); }
+		public TextFunctionContext(RelativePathContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterTextFunction(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitTextFunction(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitTextFunction(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class SequenceOfPathsContext extends RelativePathContext {
 		public List<RelativePathContext> relativePath() {
 			return getRuleContexts(RelativePathContext.class);
@@ -355,32 +326,8 @@ public class XPathParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class TextFunctionContext extends RelativePathContext {
-		public TerminalNode TEXTFUNC() { return getToken(XPathParser.TEXTFUNC, 0); }
-		public TextFunctionContext(RelativePathContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterTextFunction(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitTextFunction(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitTextFunction(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class SelfContext extends RelativePathContext {
 		public TerminalNode DOT() { return getToken(XPathParser.DOT, 0); }
-		public List<RelativePathContext> relativePath() {
-			return getRuleContexts(RelativePathContext.class);
-		}
-		public RelativePathContext relativePath(int i) {
-			return getRuleContext(RelativePathContext.class,i);
-		}
-		public TerminalNode SLASH() { return getToken(XPathParser.SLASH, 0); }
 		public SelfContext(RelativePathContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -418,10 +365,31 @@ public class XPathParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class TagContext extends RelativePathContext {
-		public TagNameContext tagName() {
-			return getRuleContext(TagNameContext.class,0);
+	public static class RelativePathChildrenContext extends RelativePathContext {
+		public List<RelativePathContext> relativePath() {
+			return getRuleContexts(RelativePathContext.class);
 		}
+		public RelativePathContext relativePath(int i) {
+			return getRuleContext(RelativePathContext.class,i);
+		}
+		public TerminalNode SLASH() { return getToken(XPathParser.SLASH, 0); }
+		public RelativePathChildrenContext(RelativePathContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterRelativePathChildren(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitRelativePathChildren(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitRelativePathChildren(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class TagContext extends RelativePathContext {
+		public TerminalNode NAME() { return getToken(XPathParser.NAME, 0); }
 		public TagContext(RelativePathContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -438,9 +406,7 @@ public class XPathParser extends Parser {
 		}
 	}
 	public static class AttributeContext extends RelativePathContext {
-		public AttNameContext attName() {
-			return getRuleContext(AttNameContext.class,0);
-		}
+		public TerminalNode NAME() { return getToken(XPathParser.NAME, 0); }
 		public AttributeContext(RelativePathContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
@@ -505,13 +471,13 @@ public class XPathParser extends Parser {
 		int _parentState = getState();
 		RelativePathContext _localctx = new RelativePathContext(_ctx, _parentState);
 		RelativePathContext _prevctx = _localctx;
-		int _startState = 6;
-		enterRecursionRule(_localctx, 6, RULE_relativePath, _p);
+		int _startState = 4;
+		enterRecursionRule(_localctx, 4, RULE_relativePath, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(44);
+			setState(36);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case NAME:
@@ -520,8 +486,8 @@ public class XPathParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(31);
-				tagName();
+				setState(23);
+				match(NAME);
 				}
 				break;
 			case ASTRID:
@@ -529,7 +495,7 @@ public class XPathParser extends Parser {
 				_localctx = new AllContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(32);
+				setState(24);
 				match(ASTRID);
 				}
 				break;
@@ -538,7 +504,7 @@ public class XPathParser extends Parser {
 				_localctx = new SelfContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(33);
+				setState(25);
 				match(DOT);
 				}
 				break;
@@ -547,7 +513,7 @@ public class XPathParser extends Parser {
 				_localctx = new ParentDirectoryContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(34);
+				setState(26);
 				match(DDOT);
 				}
 				break;
@@ -556,7 +522,7 @@ public class XPathParser extends Parser {
 				_localctx = new TextFunctionContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(35);
+				setState(27);
 				match(TEXTFUNC);
 				}
 				break;
@@ -565,10 +531,10 @@ public class XPathParser extends Parser {
 				_localctx = new AttributeContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(36);
+				setState(28);
 				match(T__2);
-				setState(37);
-				attName();
+				setState(29);
+				match(NAME);
 				}
 				break;
 			case T__3:
@@ -576,11 +542,11 @@ public class XPathParser extends Parser {
 				_localctx = new PathInParenthesisContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(38);
+				setState(30);
 				match(T__3);
-				setState(39);
+				setState(31);
 				relativePath(0);
-				setState(40);
+				setState(32);
 				match(T__4);
 				}
 				break;
@@ -589,9 +555,9 @@ public class XPathParser extends Parser {
 				_localctx = new SelfOrdescendentPathContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(42);
+				setState(34);
 				match(DOUBLESLASH);
-				setState(43);
+				setState(35);
 				relativePath(3);
 				}
 				break;
@@ -599,7 +565,7 @@ public class XPathParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(59);
+			setState(51);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -607,18 +573,18 @@ public class XPathParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(57);
+					setState(49);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,2,_ctx) ) {
 					case 1:
 						{
-						_localctx = new SelfContext(new RelativePathContext(_parentctx, _parentState));
+						_localctx = new RelativePathChildrenContext(new RelativePathContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relativePath);
-						setState(46);
+						setState(38);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(47);
+						setState(39);
 						match(SLASH);
-						setState(48);
+						setState(40);
 						relativePath(5);
 						}
 						break;
@@ -626,11 +592,11 @@ public class XPathParser extends Parser {
 						{
 						_localctx = new SequenceOfPathsContext(new RelativePathContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relativePath);
-						setState(49);
+						setState(41);
 						if (!(precpred(_ctx, 1))) throw new FailedPredicateException(this, "precpred(_ctx, 1)");
-						setState(50);
+						setState(42);
 						match(T__7);
-						setState(51);
+						setState(43);
 						relativePath(2);
 						}
 						break;
@@ -638,20 +604,20 @@ public class XPathParser extends Parser {
 						{
 						_localctx = new PathWithFilterContext(new RelativePathContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_relativePath);
-						setState(52);
+						setState(44);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(53);
+						setState(45);
 						match(T__5);
-						setState(54);
+						setState(46);
 						pathFilter(0);
-						setState(55);
+						setState(47);
 						match(T__6);
 						}
 						break;
 					}
 					} 
 				}
-				setState(61);
+				setState(53);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 			}
@@ -668,90 +634,6 @@ public class XPathParser extends Parser {
 		return _localctx;
 	}
 
-	public static class AttNameContext extends ParserRuleContext {
-		public TerminalNode NAME() { return getToken(XPathParser.NAME, 0); }
-		public AttNameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_attName; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterAttName(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitAttName(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitAttName(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final AttNameContext attName() throws RecognitionException {
-		AttNameContext _localctx = new AttNameContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_attName);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(62);
-			match(NAME);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class TagNameContext extends ParserRuleContext {
-		public TerminalNode NAME() { return getToken(XPathParser.NAME, 0); }
-		public TagNameContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_tagName; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterTagName(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitTagName(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitTagName(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final TagNameContext tagName() throws RecognitionException {
-		TagNameContext _localctx = new TagNameContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_tagName);
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(64);
-			match(NAME);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
 	public static class PathFilterContext extends ParserRuleContext {
 		public PathFilterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -763,49 +645,23 @@ public class XPathParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class PathValueEqualContext extends PathFilterContext {
-		public List<RelativePathContext> relativePath() {
-			return getRuleContexts(RelativePathContext.class);
+	public static class NotFilterContext extends PathFilterContext {
+		public TerminalNode NOT() { return getToken(XPathParser.NOT, 0); }
+		public PathFilterContext pathFilter() {
+			return getRuleContext(PathFilterContext.class,0);
 		}
-		public RelativePathContext relativePath(int i) {
-			return getRuleContext(RelativePathContext.class,i);
-		}
-		public TerminalNode EQUAL() { return getToken(XPathParser.EQUAL, 0); }
-		public PathValueEqualContext(PathFilterContext ctx) { copyFrom(ctx); }
+		public NotFilterContext(PathFilterContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterPathValueEqual(this);
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterNotFilter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitPathValueEqual(this);
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitNotFilter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitPathValueEqual(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class PathIdEqualContext extends PathFilterContext {
-		public List<RelativePathContext> relativePath() {
-			return getRuleContexts(RelativePathContext.class);
-		}
-		public RelativePathContext relativePath(int i) {
-			return getRuleContext(RelativePathContext.class,i);
-		}
-		public TerminalNode IDEQUAL() { return getToken(XPathParser.IDEQUAL, 0); }
-		public PathIdEqualContext(PathFilterContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterPathIdEqual(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitPathIdEqual(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitPathIdEqual(this);
+			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitNotFilter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -828,23 +684,26 @@ public class XPathParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class NotFilterContext extends PathFilterContext {
-		public TerminalNode NOT() { return getToken(XPathParser.NOT, 0); }
-		public PathFilterContext pathFilter() {
-			return getRuleContext(PathFilterContext.class,0);
+	public static class PathValueEqualContext extends PathFilterContext {
+		public List<RelativePathContext> relativePath() {
+			return getRuleContexts(RelativePathContext.class);
 		}
-		public NotFilterContext(PathFilterContext ctx) { copyFrom(ctx); }
+		public RelativePathContext relativePath(int i) {
+			return getRuleContext(RelativePathContext.class,i);
+		}
+		public TerminalNode EQUAL() { return getToken(XPathParser.EQUAL, 0); }
+		public PathValueEqualContext(PathFilterContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterNotFilter(this);
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterPathValueEqual(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitNotFilter(this);
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitPathValueEqual(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitNotFilter(this);
+			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitPathValueEqual(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -892,6 +751,29 @@ public class XPathParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class PathIdEqualContext extends PathFilterContext {
+		public List<RelativePathContext> relativePath() {
+			return getRuleContexts(RelativePathContext.class);
+		}
+		public RelativePathContext relativePath(int i) {
+			return getRuleContext(RelativePathContext.class,i);
+		}
+		public TerminalNode IDEQUAL() { return getToken(XPathParser.IDEQUAL, 0); }
+		public PathIdEqualContext(PathFilterContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).enterPathIdEqual(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof XPathListener ) ((XPathListener)listener).exitPathIdEqual(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof XPathVisitor ) return ((XPathVisitor<? extends T>)visitor).visitPathIdEqual(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 
 	public final PathFilterContext pathFilter() throws RecognitionException {
 		return pathFilter(0);
@@ -902,13 +784,13 @@ public class XPathParser extends Parser {
 		int _parentState = getState();
 		PathFilterContext _localctx = new PathFilterContext(_ctx, _parentState);
 		PathFilterContext _prevctx = _localctx;
-		int _startState = 12;
-		enterRecursionRule(_localctx, 12, RULE_pathFilter, _p);
+		int _startState = 6;
+		enterRecursionRule(_localctx, 6, RULE_pathFilter, _p);
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(82);
+			setState(70);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
 			case 1:
@@ -917,13 +799,13 @@ public class XPathParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(67);
+				setState(55);
 				relativePath(0);
-				setState(68);
+				setState(56);
 				relativePath(0);
-				setState(69);
+				setState(57);
 				match(EQUAL);
-				setState(70);
+				setState(58);
 				relativePath(0);
 				}
 				break;
@@ -932,11 +814,11 @@ public class XPathParser extends Parser {
 				_localctx = new PathIdEqualContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(72);
+				setState(60);
 				relativePath(0);
-				setState(73);
+				setState(61);
 				match(IDEQUAL);
-				setState(74);
+				setState(62);
 				relativePath(0);
 				}
 				break;
@@ -945,11 +827,11 @@ public class XPathParser extends Parser {
 				_localctx = new FirstFilterContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(76);
+				setState(64);
 				match(T__3);
-				setState(77);
+				setState(65);
 				pathFilter(0);
-				setState(78);
+				setState(66);
 				match(T__4);
 				}
 				break;
@@ -958,15 +840,15 @@ public class XPathParser extends Parser {
 				_localctx = new NotFilterContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(80);
+				setState(68);
 				match(NOT);
-				setState(81);
+				setState(69);
 				pathFilter(1);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(92);
+			setState(80);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -974,18 +856,18 @@ public class XPathParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(90);
+					setState(78);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 					case 1:
 						{
 						_localctx = new AndpathFilterContext(new PathFilterContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_pathFilter);
-						setState(84);
+						setState(72);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(85);
+						setState(73);
 						match(T__8);
-						setState(86);
+						setState(74);
 						pathFilter(4);
 						}
 						break;
@@ -993,18 +875,18 @@ public class XPathParser extends Parser {
 						{
 						_localctx = new OrpathFilterContext(new PathFilterContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_pathFilter);
-						setState(87);
+						setState(75);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(88);
+						setState(76);
 						match(T__9);
-						setState(89);
+						setState(77);
 						pathFilter(3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(94);
+				setState(82);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,6,_ctx);
 			}
@@ -1023,9 +905,9 @@ public class XPathParser extends Parser {
 
 	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
 		switch (ruleIndex) {
-		case 3:
+		case 2:
 			return relativePath_sempred((RelativePathContext)_localctx, predIndex);
-		case 6:
+		case 3:
 			return pathFilter_sempred((PathFilterContext)_localctx, predIndex);
 		}
 		return true;
@@ -1052,31 +934,29 @@ public class XPathParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27b\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
-		"\3\2\5\2\31\n\2\3\3\3\3\3\3\3\3\3\4\3\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
-		"\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5/\n\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3"+
-		"\5\3\5\3\5\7\5<\n\5\f\5\16\5?\13\5\3\6\3\6\3\7\3\7\3\b\3\b\3\b\3\b\3\b"+
-		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\bU\n\b\3\b\3\b\3\b\3\b"+
-		"\3\b\3\b\7\b]\n\b\f\b\16\b`\13\b\3\b\2\4\b\16\t\2\4\6\b\n\f\16\2\2\2j"+
-		"\2\30\3\2\2\2\4\32\3\2\2\2\6\36\3\2\2\2\b.\3\2\2\2\n@\3\2\2\2\fB\3\2\2"+
-		"\2\16T\3\2\2\2\20\21\5\4\3\2\21\22\7\17\2\2\22\23\5\b\5\2\23\31\3\2\2"+
-		"\2\24\25\5\4\3\2\25\26\7\20\2\2\26\27\5\b\5\2\27\31\3\2\2\2\30\20\3\2"+
-		"\2\2\30\24\3\2\2\2\31\3\3\2\2\2\32\33\7\3\2\2\33\34\5\6\4\2\34\35\7\4"+
-		"\2\2\35\5\3\2\2\2\36\37\7\16\2\2\37\7\3\2\2\2 !\b\5\1\2!/\5\f\7\2\"/\7"+
-		"\21\2\2#/\7\22\2\2$/\7\23\2\2%/\7\24\2\2&\'\7\5\2\2\'/\5\n\6\2()\7\6\2"+
-		"\2)*\5\b\5\2*+\7\7\2\2+/\3\2\2\2,-\7\20\2\2-/\5\b\5\5. \3\2\2\2.\"\3\2"+
-		"\2\2.#\3\2\2\2.$\3\2\2\2.%\3\2\2\2.&\3\2\2\2.(\3\2\2\2.,\3\2\2\2/=\3\2"+
-		"\2\2\60\61\f\6\2\2\61\62\7\17\2\2\62<\5\b\5\7\63\64\f\3\2\2\64\65\7\n"+
-		"\2\2\65<\5\b\5\4\66\67\f\4\2\2\678\7\b\2\289\5\16\b\29:\7\t\2\2:<\3\2"+
-		"\2\2;\60\3\2\2\2;\63\3\2\2\2;\66\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2"+
-		">\t\3\2\2\2?=\3\2\2\2@A\7\r\2\2A\13\3\2\2\2BC\7\r\2\2C\r\3\2\2\2DE\b\b"+
-		"\1\2EF\5\b\5\2FG\5\b\5\2GH\7\26\2\2HI\5\b\5\2IU\3\2\2\2JK\5\b\5\2KL\7"+
-		"\27\2\2LM\5\b\5\2MU\3\2\2\2NO\7\6\2\2OP\5\16\b\2PQ\7\7\2\2QU\3\2\2\2R"+
-		"S\7\25\2\2SU\5\16\b\3TD\3\2\2\2TJ\3\2\2\2TN\3\2\2\2TR\3\2\2\2U^\3\2\2"+
-		"\2VW\f\5\2\2WX\7\13\2\2X]\5\16\b\6YZ\f\4\2\2Z[\7\f\2\2[]\5\16\b\5\\V\3"+
-		"\2\2\2\\Y\3\2\2\2]`\3\2\2\2^\\\3\2\2\2^_\3\2\2\2_\17\3\2\2\2`^\3\2\2\2"+
-		"\t\30.;=T\\^";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27V\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\23\n\2\3\3\3\3"+
+		"\3\3\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4\'"+
+		"\n\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4\64\n\4\f\4\16\4\67"+
+		"\13\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5"+
+		"\5\5I\n\5\3\5\3\5\3\5\3\5\3\5\3\5\7\5Q\n\5\f\5\16\5T\13\5\3\5\2\4\6\b"+
+		"\6\2\4\6\b\2\2\2a\2\22\3\2\2\2\4\24\3\2\2\2\6&\3\2\2\2\bH\3\2\2\2\n\13"+
+		"\5\4\3\2\13\f\7\17\2\2\f\r\5\6\4\2\r\23\3\2\2\2\16\17\5\4\3\2\17\20\7"+
+		"\20\2\2\20\21\5\6\4\2\21\23\3\2\2\2\22\n\3\2\2\2\22\16\3\2\2\2\23\3\3"+
+		"\2\2\2\24\25\7\3\2\2\25\26\7\16\2\2\26\27\7\4\2\2\27\5\3\2\2\2\30\31\b"+
+		"\4\1\2\31\'\7\r\2\2\32\'\7\21\2\2\33\'\7\22\2\2\34\'\7\23\2\2\35\'\7\24"+
+		"\2\2\36\37\7\5\2\2\37\'\7\r\2\2 !\7\6\2\2!\"\5\6\4\2\"#\7\7\2\2#\'\3\2"+
+		"\2\2$%\7\20\2\2%\'\5\6\4\5&\30\3\2\2\2&\32\3\2\2\2&\33\3\2\2\2&\34\3\2"+
+		"\2\2&\35\3\2\2\2&\36\3\2\2\2& \3\2\2\2&$\3\2\2\2\'\65\3\2\2\2()\f\6\2"+
+		"\2)*\7\17\2\2*\64\5\6\4\7+,\f\3\2\2,-\7\n\2\2-\64\5\6\4\4./\f\4\2\2/\60"+
+		"\7\b\2\2\60\61\5\b\5\2\61\62\7\t\2\2\62\64\3\2\2\2\63(\3\2\2\2\63+\3\2"+
+		"\2\2\63.\3\2\2\2\64\67\3\2\2\2\65\63\3\2\2\2\65\66\3\2\2\2\66\7\3\2\2"+
+		"\2\67\65\3\2\2\289\b\5\1\29:\5\6\4\2:;\5\6\4\2;<\7\26\2\2<=\5\6\4\2=I"+
+		"\3\2\2\2>?\5\6\4\2?@\7\27\2\2@A\5\6\4\2AI\3\2\2\2BC\7\6\2\2CD\5\b\5\2"+
+		"DE\7\7\2\2EI\3\2\2\2FG\7\25\2\2GI\5\b\5\3H8\3\2\2\2H>\3\2\2\2HB\3\2\2"+
+		"\2HF\3\2\2\2IR\3\2\2\2JK\f\5\2\2KL\7\13\2\2LQ\5\b\5\6MN\f\4\2\2NO\7\f"+
+		"\2\2OQ\5\b\5\5PJ\3\2\2\2PM\3\2\2\2QT\3\2\2\2RP\3\2\2\2RS\3\2\2\2S\t\3"+
+		"\2\2\2TR\3\2\2\2\t\22&\63\65HPR";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
