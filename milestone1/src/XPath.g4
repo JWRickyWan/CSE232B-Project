@@ -19,7 +19,7 @@ relativePath:
              |'@'NAME     #attribute
              |'('relativePath')' #pathInParenthesis
              |relativePath SLASH relativePath #relativePathChildren
-             |DOUBLESLASH relativePath #selfOrdescendentPath
+             |relativePath DOUBLESLASH relativePath #selfOrdescendentPath
              |relativePath'['pathFilter']'  #pathWithFilter
              |relativePath','relativePath   #sequenceOfPaths
              ;
@@ -28,8 +28,9 @@ DOT:'.';
 DDOT:'..';
 TEXTFUNC:'text()';
 
-pathFilter:relativePath
-           relativePath EQUAL relativePath  #pathValueEqual
+pathFilter:
+            relativePath     #relativePathFilter
+           |relativePath EQUAL relativePath  #pathValueEqual
            |relativePath IDEQUAL relativePath    #pathIdEqual
            |'('pathFilter')'     #firstFilter
            |pathFilter 'and' pathFilter   #andpathFilter

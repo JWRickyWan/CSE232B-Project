@@ -121,6 +121,13 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFirstFilter(XPathParser.FirstFilterContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code relativePathFilter}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelativePathFilter(XPathParser.RelativePathFilterContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code pathValueEqual}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree

@@ -128,6 +128,13 @@ public class XPathBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitRelativePathFilter(XPathParser.RelativePathFilterContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitPathValueEqual(XPathParser.PathValueEqualContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

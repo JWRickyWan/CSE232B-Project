@@ -197,6 +197,18 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitFirstFilter(XPathParser.FirstFilterContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code relativePathFilter}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterRelativePathFilter(XPathParser.RelativePathFilterContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code relativePathFilter}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitRelativePathFilter(XPathParser.RelativePathFilterContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code pathValueEqual}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
