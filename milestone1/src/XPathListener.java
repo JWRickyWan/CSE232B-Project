@@ -7,6 +7,26 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface XPathListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link XPathParser#doc}.
+	 * @param ctx the parse tree
+	 */
+	void enterDoc(XPathParser.DocContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPathParser#doc}.
+	 * @param ctx the parse tree
+	 */
+	void exitDoc(XPathParser.DocContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPathParser#filename}.
+	 * @param ctx the parse tree
+	 */
+	void enterFilename(XPathParser.FilenameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPathParser#filename}.
+	 * @param ctx the parse tree
+	 */
+	void exitFilename(XPathParser.FilenameContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code absolutePathChild}
 	 * labeled alternative in {@link XPathParser#absolutePath}.
 	 * @param ctx the parse tree
@@ -30,16 +50,6 @@ public interface XPathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDescendentAbsolutePath(XPathParser.DescendentAbsolutePathContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link XPathParser#doc}.
-	 * @param ctx the parse tree
-	 */
-	void enterDoc(XPathParser.DocContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link XPathParser#doc}.
-	 * @param ctx the parse tree
-	 */
-	void exitDoc(XPathParser.DocContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code all}
 	 * labeled alternative in {@link XPathParser#relativePath}.

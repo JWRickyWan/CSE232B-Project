@@ -1,14 +1,13 @@
 grammar XPath;
-NAME: '[a-zA-Z0-9]+';
-FILE:[a-zA-Z0-9_]+'.xml';
+NAME: [a-zA-Z0-9_-]+;
+FILE:NAME;
+doc: 'doc' '(' '"' filename '"' ')';
+filename:NAME('.' NAME)?;
 absolutePath:
-      doc SLASH relativePath #absolutePathChild
-      |doc DOUBLESLASH relativePath #DescendentAbsolutePath
+      doc SLASH relativePath EOF #absolutePathChild
+      |doc DOUBLESLASH relativePath EOF #DescendentAbsolutePath
       ;
-SLASH:'/';
-DOUBLESLASH: '//';
 
-doc: 'doc("'FILE'")';
 
 relativePath:
              NAME        #tag
@@ -23,10 +22,6 @@ relativePath:
              |relativePath'['pathFilter']'  #pathWithFilter
              |relativePath','relativePath   #sequenceOfPaths
              ;
-ASTRID:'*';
-DOT:'.';
-DDOT:'..';
-TEXTFUNC:'text()';
 
 pathFilter:
             relativePath     #relativePathFilter
@@ -37,6 +32,13 @@ pathFilter:
            |pathFilter 'or' pathFilter      #orpathFilter
            |NOT pathFilter       #notFilter
            ;
+SLASH:'/';
+DOUBLESLASH: '//';
+ASTRID:'*';
+DOT:'.';
+DDOT:'..';
+TEXTFUNC:'text()';
 NOT: 'not';
 EQUAL: '='|'eq';
 IDEQUAL:'=='|'is';
+WS: [ \t\r\n]+ -> skip;
