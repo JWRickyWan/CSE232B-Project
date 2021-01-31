@@ -181,11 +181,14 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     }
 
     @Override public ArrayList<Node> visitNotFilter(XPathParser.NotFilterContext ctx) {
-        ArrayList<Node> dele= new ArrayList<>(visit(ctx.pathFilter()));
-        for(Node dele_node:dele){
-            nodes.remove(dele_node);
-        }
-        return nodes;
+        HashSet<Node> left = new HashSet<Node>(nodes);
+        HashSet<Node> right = new HashSet<Node>(visit(ctx.pathFilter()));
+        HashSet<Node> diff = new HashSet<Node>();
+        diff.addAll(left);
+        diff.removeAll(right);
+        ArrayList<Node> res = new ArrayList<Node>(diff);
+        nodes = res;
+        return res;
     }
 
     @Override public ArrayList<Node> visitFirstFilter(XPathParser.FirstFilterContext ctx) {
@@ -200,33 +203,48 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     }
 
     @Override public ArrayList<Node> visitPathValueEqual(XPathParser.PathValueEqualContext ctx) {
-        ArrayList<Node> origin=nodes;
-        ArrayList<Node> left=visit(ctx.relativePath(0));
-        nodes=origin;
-        ArrayList<Node> right=visit(ctx.relativePath(1));
-        nodes=origin;
-        for(Node l:left){
-            for(Node r:right){
-                if(l.isEqualNode(r)) return nodes;
+        ArrayList<Node>  res = new ArrayList<>();
+        ArrayList<Node> copy = nodes;
+        for(Node node: copy) {
+            ArrayList<Node> origin = new ArrayList<>();
+            origin.add(node);
+            nodes = origin;
+            ArrayList<Node> left = visit(ctx.relativePath(0));
+            nodes = origin;
+            ArrayList<Node> right = visit(ctx.relativePath(1));
+            for (Node l : left) {
+                for (Node r : right) {
+                    if (l.isEqualNode(r)){res.add(node);
+                    }
+                }
             }
         }
-        return new ArrayList<Node>();
+        nodes = res;
+        return res;
     }
 
     @Override public ArrayList<Node> visitAndpathFilter(XPathParser.AndpathFilterContext ctx) {
         HashSet<Node> f0=new HashSet<>(visit(ctx.pathFilter(0)));
         HashSet<Node> f1=new HashSet<>(visit(ctx.pathFilter(1)));
-        f0.retainAll(f1);
-        nodes=new ArrayList<>(f0);
-        return nodes;
+        HashSet<Node> intersect = new HashSet<Node>();
+        intersect.addAll(f0);
+        intersect.retainAll(f1);
+        ArrayList<Node> res = new ArrayList<>(intersect);
+        nodes=res;
+
+        return res;
     }
 
     @Override public ArrayList<Node> visitOrpathFilter(XPathParser.OrpathFilterContext ctx) {
         HashSet<Node> f0=new HashSet<>(visit(ctx.pathFilter(0)));
         HashSet<Node> f1=new HashSet<>(visit(ctx.pathFilter(1)));
+        HashSet<Node> union = new HashSet<Node>();
+        union.addAll(f0);
+        union.addAll(f1);
         f0.addAll(f1);
-        nodes=new ArrayList<>(f0);
-        return nodes;
+        ArrayList<Node> res = new ArrayList<Node>(union);
+        nodes = res;
+        return res;
     }
 
     @Override public ArrayList<Node> visitPathIdEqual(XPathParser.PathIdEqualContext ctx) {

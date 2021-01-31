@@ -1,16 +1,16 @@
 grammar XPath;
 NAME: [a-zA-Z0-9_-]+;
 FILE:NAME;
-doc: 'doc' '(' '"' filename '"' ')';
+doc: 'doc' '(' QUOTE filename QUOTE ')';
 filename:NAME('.' NAME)?;
 absolutePath:
-      doc SLASH relativePath EOF #absolutePathChild
-      |doc DOUBLESLASH relativePath EOF #DescendentAbsolutePath
+      doc SLASH relativePath  #absolutePathChild
+      |doc DOUBLESLASH relativePath  #DescendentAbsolutePath
       ;
 
 
 relativePath:
-             NAME        #tag
+             QUOTE?NAME QUOTE?        #tag
              |ASTRID         #all
              |DOT            #self
              |DDOT           #parentDirectory
@@ -42,3 +42,4 @@ NOT: 'not';
 EQUAL: '='|'eq';
 IDEQUAL:'=='|'is';
 WS: [ \t\r\n]+ -> skip;
+QUOTE:'"'|'“'|'”';
