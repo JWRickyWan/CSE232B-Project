@@ -117,6 +117,7 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
         }
         return temp;
     }
+<<<<<<< HEAD
     /*
         @Override
         public ArrayList<Node> visitText(XPathParser.TextContext ctx) {
@@ -145,6 +146,37 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
             return temp;
         }
     */
+=======
+/*
+    @Override
+    public ArrayList<Node> visitText(XPathParser.TextContext ctx) {
+        ArrayList<Node> temp = new ArrayList<>();
+        ArrayList<Node> allNodes=new ArrayList<>(nodes);
+        int count=0;
+        while(count<allNodes.size()){
+            Node node=allNodes.get(count);
+            if(node.getNodeType()==Node.TEXT_NODE) count++;
+            else{
+                allNodes.remove(count);
+                allNodes.addAll(getChildrenList(node));
+            }
+        }
+        for(Node node:allNodes){
+            String node_val="\""+node.getTextContent()+"\"";
+            short node_type=node.getNodeType();
+            boolean isText=node_type==Node.TEXT_NODE;
+            if(node.getNodeType()== Node.TEXT_NODE){
+                String ctxValue=ctx.getText();
+                if (node_val.equals(ctx.getText())) {
+                    temp.add(node);
+                }
+            }
+        }
+        return temp;
+    }
+
+*/
+>>>>>>> 46ee878c59c1ceccaf4e9f43f89044b65e424b1b
     @Override
     public ArrayList<Node> visitSelf(XPathParser.SelfContext ctx) {
         return nodes;
