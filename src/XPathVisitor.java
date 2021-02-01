@@ -1,4 +1,4 @@
-// Generated from XPath.g4 by ANTLR 4.9.1
+// Generated from /Users/qihongliu/Desktop/ucsd/Winter2021/CSE232B/project/Code/CSE232B-Project/src/XPath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -112,6 +112,13 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code pathTextEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPathTextEqual(XPathParser.PathTextEqualContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code notFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.

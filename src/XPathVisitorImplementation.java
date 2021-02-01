@@ -105,15 +105,47 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
         ArrayList<Node> temp = new ArrayList<>();
         for(Node n:nodes){
             for(int i =0;i<n.getChildNodes().getLength();i++){
+                Node node=n.getChildNodes().item(i);
+                String node_val=n.getChildNodes().item(i).getTextContent();
+                short node_type=node.getNodeType();
+                boolean isText=node_type==Node.TEXT_NODE;
                 if(n.getChildNodes().item(i).getNodeType()== Node.TEXT_NODE&&
-                        (!n.getChildNodes().item(i).getTextContent().equals("/n"))){
+                        (!n.getChildNodes().item(i).getTextContent().equals("\n"))){
                     temp.add(n.getChildNodes().item(i));
                 }
             }
         }
         return temp;
     }
+/*
+    @Override
+    public ArrayList<Node> visitText(XPathParser.TextContext ctx) {
+        ArrayList<Node> temp = new ArrayList<>();
+        ArrayList<Node> allNodes=new ArrayList<>(nodes);
+        int count=0;
+        while(count<allNodes.size()){
+            Node node=allNodes.get(count);
+            if(node.getNodeType()==Node.TEXT_NODE) count++;
+            else{
+                allNodes.remove(count);
+                allNodes.addAll(getChildrenList(node));
+            }
+        }
+        for(Node node:allNodes){
+            String node_val="\""+node.getTextContent()+"\"";
+            short node_type=node.getNodeType();
+            boolean isText=node_type==Node.TEXT_NODE;
+            if(node.getNodeType()== Node.TEXT_NODE){
+                String ctxValue=ctx.getText();
+                if (node_val.equals(ctx.getText())) {
+                    temp.add(node);
+                }
+            }
+        }
+        return temp;
+    }
 
+*/
     @Override
     public ArrayList<Node> visitSelf(XPathParser.SelfContext ctx) {
         return nodes;
@@ -135,10 +167,11 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     @Override
     public ArrayList<Node> visitTag(XPathParser.TagContext ctx) {
         ArrayList<Node> res=new ArrayList<>();
-        String tagName=ctx.NAME().getText();
+        String tagName=ctx.getText();
         for(Node node:nodes){
             ArrayList<Node> tempChildren=getChildrenList(node);
             for(Node child:tempChildren){
+                String nodeValue=child.getNodeName();
                 if(child.getNodeName().equals(tagName)) res.add(child);
             }
         }
@@ -176,8 +209,28 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
             aux.addAll(tmpChildren);
         }
         nodes=res;
-        visit(ctx.relativePath(1));
+        return visit(ctx.relativePath(1));
+    }
+
+    @Override public ArrayList<Node> visitPathTextEqual(XPathParser.PathTextEqualContext ctx) {
+        HashSet<Node>  res = new HashSet<>();
+        ArrayList<Node> copy = nodes;
+        for(Node node: copy) {
+            ArrayList<Node> origin = new ArrayList<>();
+            origin.add(node);
+            nodes = origin;
+            ArrayList<Node> left = visit(ctx.relativePath());
+            String text=ctx.NAME().getText();
+            for (Node l : left) {
+                String nodeValue=l.getNodeValue();
+                if (nodeValue!=null && nodeValue.equals(text)){
+                    res.add(node);
+                }
+            }
+        }
+        nodes = new ArrayList<>( res);
         return nodes;
+
     }
 
     @Override public ArrayList<Node> visitNotFilter(XPathParser.NotFilterContext ctx) {
@@ -203,7 +256,7 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     }
 
     @Override public ArrayList<Node> visitPathValueEqual(XPathParser.PathValueEqualContext ctx) {
-        ArrayList<Node>  res = new ArrayList<>();
+        HashSet<Node>  res = new HashSet<>();
         ArrayList<Node> copy = nodes;
         for(Node node: copy) {
             ArrayList<Node> origin = new ArrayList<>();
@@ -214,13 +267,14 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
             ArrayList<Node> right = visit(ctx.relativePath(1));
             for (Node l : left) {
                 for (Node r : right) {
-                    if (l.isEqualNode(r)){res.add(node);
+                    if (l.isEqualNode(r)){
+                        res.add(node);
                     }
                 }
             }
         }
-        nodes = res;
-        return res;
+        nodes = new ArrayList<>( res);
+        return nodes;
     }
 
     @Override public ArrayList<Node> visitAndpathFilter(XPathParser.AndpathFilterContext ctx) {

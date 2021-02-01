@@ -1,4 +1,4 @@
-// Generated from XPath.g4 by ANTLR 4.9.1
+// Generated from /Users/qihongliu/Desktop/ucsd/Winter2021/CSE232B/project/Code/CSE232B-Project/src/XPath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -115,6 +115,13 @@ public class XPathBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitPathTextEqual(XPathParser.PathTextEqualContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
