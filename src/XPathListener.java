@@ -183,6 +183,18 @@ public interface XPathListener extends ParseTreeListener {
 	 */
 	void exitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code pathTextEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 */
+	void enterPathTextEqual(XPathParser.PathTextEqualContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pathTextEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 */
+	void exitPathTextEqual(XPathParser.PathTextEqualContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code notFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree

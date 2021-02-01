@@ -1,20 +1,23 @@
 grammar XPath;
+NOT: 'not';
+EQUAL: '='|'eq';
+IDEQUAL:'=='|'is';
 NAME: [a-zA-Z0-9_-]+;
 FILE:NAME;
-doc: 'doc' '(' QUOTE filename QUOTE ')';
+doc: ('doc'|'document') '(' QUOTE filename QUOTE ')';
 filename:NAME('.' NAME)?;
 absolutePath:
       doc SLASH relativePath  #absolutePathChild
       |doc DOUBLESLASH relativePath  #DescendentAbsolutePath
       ;
 
-
 relativePath:
-             QUOTE?NAME QUOTE?        #tag
+             NAME       #tag
              |ASTRID         #all
-             |DOT            #self
+             |DOT           #self
              |DDOT           #parentDirectory
              |TEXTFUNC       #textFunction
+            // |QUOTE NAME QUOTE #text
              |'@'NAME     #attribute
              |'('relativePath')' #pathInParenthesis
              |relativePath SLASH relativePath #relativePathChildren
@@ -26,6 +29,7 @@ relativePath:
 pathFilter:
             relativePath     #relativePathFilter
            |relativePath EQUAL relativePath  #pathValueEqual
+           |relativePath EQUAL QUOTE NAME QUOTE #pathTextEqual
            |relativePath IDEQUAL relativePath    #pathIdEqual
            |'('pathFilter')'     #firstFilter
            |pathFilter 'and' pathFilter   #andpathFilter
@@ -38,8 +42,5 @@ ASTRID:'*';
 DOT:'.';
 DDOT:'..';
 TEXTFUNC:'text()';
-NOT: 'not';
-EQUAL: '='|'eq';
-IDEQUAL:'=='|'is';
 WS: [ \t\r\n]+ -> skip;
 QUOTE:'"'|'“'|'”';

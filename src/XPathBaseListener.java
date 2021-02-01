@@ -195,6 +195,18 @@ public class XPathBaseListener implements XPathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPathTextEqual(XPathParser.PathTextEqualContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPathTextEqual(XPathParser.PathTextEqualContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterNotFilter(XPathParser.NotFilterContext ctx) { }
 	/**
 	 * {@inheritDoc}

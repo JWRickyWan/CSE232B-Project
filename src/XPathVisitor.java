@@ -113,6 +113,13 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code pathTextEqual}
+	 * labeled alternative in {@link XPathParser#pathFilter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPathTextEqual(XPathParser.PathTextEqualContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code notFilter}
 	 * labeled alternative in {@link XPathParser#pathFilter}.
 	 * @param ctx the parse tree
