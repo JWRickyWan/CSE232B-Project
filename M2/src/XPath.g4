@@ -12,18 +12,18 @@ absolutePath:
       ;
 
 relativePath:
-             NAME       #tag
+             tagName       #tag
              |ASTRID         #all
              |DOT           #self
              |DDOT           #parentDirectory
              |TEXTFUNC       #textFunction
             // |QUOTE NAME QUOTE #text
-             |'@'NAME     #attribute
+             |'@' attName     #attribute
+             |relativePath','relativePath   #sequenceOfPaths
              |'('relativePath')' #pathInParenthesis
              |relativePath SLASH relativePath #relativePathChildren
              |relativePath DOUBLESLASH relativePath #selfOrdescendentPath
              |relativePath'['pathFilter']'  #pathWithFilter
-             |relativePath','relativePath   #sequenceOfPaths
              ;
 
 pathFilter:
@@ -36,6 +36,8 @@ pathFilter:
            |pathFilter 'or' pathFilter      #orpathFilter
            |NOT pathFilter       #notFilter
            ;
+tagName:NAME;
+attName:NAME;
 SLASH:'/';
 DOUBLESLASH: '//';
 ASTRID:'*';

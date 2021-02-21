@@ -1,4 +1,4 @@
-// Generated from /Users/qihongliu/Desktop/ucsd/Winter2021/CSE232B/project/Code/CSE232B-Project/src/XPath.g4 by ANTLR 4.9.1
+// Generated from XPath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -278,4 +278,24 @@ public interface XPathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPathIdEqual(XPathParser.PathIdEqualContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPathParser#tagName}.
+	 * @param ctx the parse tree
+	 */
+	void enterTagName(XPathParser.TagNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPathParser#tagName}.
+	 * @param ctx the parse tree
+	 */
+	void exitTagName(XPathParser.TagNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XPathParser#attName}.
+	 * @param ctx the parse tree
+	 */
+	void enterAttName(XPathParser.AttNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XPathParser#attName}.
+	 * @param ctx the parse tree
+	 */
+	void exitAttName(XPathParser.AttNameContext ctx);
 }

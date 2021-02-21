@@ -1,4 +1,4 @@
-// Generated from /Users/qihongliu/Desktop/ucsd/Winter2021/CSE232B/project/Code/CSE232B-Project/src/XPath.g4 by ANTLR 4.9.1
+// Generated from XPath.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -38,7 +38,7 @@ public class XPathLexer extends Lexer {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'doc'", "'document'", "'('", "')'", "'@'", "'['", "']'", "','", 
+			null, "'doc'", "'document'", "'('", "')'", "'@'", "','", "'['", "']'", 
 			"'and'", "'or'", "'not'", null, null, null, null, "'/'", "'//'", "'*'", 
 			"'.'", "'..'", "'text()'"
 		};
@@ -132,8 +132,8 @@ public class XPathLexer extends Lexer {
 		"\2\'n\3\2\2\2)p\3\2\2\2+s\3\2\2\2-{\3\2\2\2/\u0081\3\2\2\2\61\62\7f\2"+
 		"\2\62\63\7q\2\2\63\64\7e\2\2\64\4\3\2\2\2\65\66\7f\2\2\66\67\7q\2\2\67"+
 		"8\7e\2\289\7w\2\29:\7o\2\2:;\7g\2\2;<\7p\2\2<=\7v\2\2=\6\3\2\2\2>?\7*"+
-		"\2\2?\b\3\2\2\2@A\7+\2\2A\n\3\2\2\2BC\7B\2\2C\f\3\2\2\2DE\7]\2\2E\16\3"+
-		"\2\2\2FG\7_\2\2G\20\3\2\2\2HI\7.\2\2I\22\3\2\2\2JK\7c\2\2KL\7p\2\2LM\7"+
+		"\2\2?\b\3\2\2\2@A\7+\2\2A\n\3\2\2\2BC\7B\2\2C\f\3\2\2\2DE\7.\2\2E\16\3"+
+		"\2\2\2FG\7]\2\2G\20\3\2\2\2HI\7_\2\2I\22\3\2\2\2JK\7c\2\2KL\7p\2\2LM\7"+
 		"f\2\2M\24\3\2\2\2NO\7q\2\2OP\7t\2\2P\26\3\2\2\2QR\7p\2\2RS\7q\2\2ST\7"+
 		"v\2\2T\30\3\2\2\2UY\7?\2\2VW\7g\2\2WY\7s\2\2XU\3\2\2\2XV\3\2\2\2Y\32\3"+
 		"\2\2\2Z[\7?\2\2[_\7?\2\2\\]\7k\2\2]_\7u\2\2^Z\3\2\2\2^\\\3\2\2\2_\34\3"+

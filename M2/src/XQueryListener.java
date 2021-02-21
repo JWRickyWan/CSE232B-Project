@@ -544,4 +544,24 @@ public interface XQueryListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPathIdEqual(XQueryParser.PathIdEqualContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XQueryParser#tagName}.
+	 * @param ctx the parse tree
+	 */
+	void enterTagName(XQueryParser.TagNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XQueryParser#tagName}.
+	 * @param ctx the parse tree
+	 */
+	void exitTagName(XQueryParser.TagNameContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XQueryParser#attName}.
+	 * @param ctx the parse tree
+	 */
+	void enterAttName(XQueryParser.AttNameContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XQueryParser#attName}.
+	 * @param ctx the parse tree
+	 */
+	void exitAttName(XQueryParser.AttNameContext ctx);
 }

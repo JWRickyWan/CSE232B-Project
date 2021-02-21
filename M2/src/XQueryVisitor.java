@@ -324,4 +324,16 @@ public interface XQueryVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPathIdEqual(XQueryParser.PathIdEqualContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XQueryParser#tagName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTagName(XQueryParser.TagNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XQueryParser#attName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAttName(XQueryParser.AttNameContext ctx);
 }

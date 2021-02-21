@@ -13,20 +13,34 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     Document document;
     @Override
     public ArrayList<Node> visitAbsolutePathChild(XPathParser.AbsolutePathChildContext ctx) {
-        return visitChildren(ctx);
+        visit(ctx.doc());
+        return visit(ctx.relativePath());
     }
+    private ArrayList<Node> getNodes(Node n){
+        ArrayList<Node> all = new ArrayList<>();
+        for(int i =0;i<n.getChildNodes().getLength();i++){
+            all.addAll(getNodes(n.getChildNodes().item(i)));
+        }
+        all.add(n);
+        return all;
 
+    }
+    private ArrayList<Node> getDescendants(ArrayList<Node> l){
+        ArrayList<Node> d = new ArrayList<>();
+        for(int i =0;i<l.size();i++){
+            if(l.get(i).getChildNodes().getLength()!=0){
+                for(int j = 0;j<l.get(i).getChildNodes().getLength();j++){
+                    d.addAll(getNodes(l.get(i).getChildNodes().item(j)));
+                }
+            }
+        }
+        return d;
+    }
     @Override
     public ArrayList<Node> visitDescendentAbsolutePath(XPathParser.DescendentAbsolutePathContext ctx) {
         visit(ctx.doc());
-        ArrayList<Node> temp = new ArrayList<>(nodes);
-        LinkedList<Node> tempLinked = new LinkedList<>(nodes);
-        while(!tempLinked.isEmpty()){
-            Node next = tempLinked.poll();
-            temp.addAll(getChildrenList(next));
-            tempLinked.addAll(getChildrenList(next));
-        }
-        nodes = temp;
+        ArrayList<Node> desc = getDescendants(nodes);
+        nodes.addAll(desc);
         return visit(ctx.relativePath());
     }
 
@@ -34,6 +48,7 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     public ArrayList<Node> visitDoc(XPathParser.DocContext ctx) {
         File xmlFile = new File(ctx.filename().getText());
         DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
+        docBuildFact.setIgnoringElementContentWhitespace(true);
         DocumentBuilder DOC = null;
         try {
             DOC = docBuildFact.newDocumentBuilder();
@@ -80,29 +95,33 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     @Override
     public ArrayList<Node> visitParentDirectory(XPathParser.ParentDirectoryContext ctx) {
         ArrayList<Node> parents = new ArrayList<>();
-        for(Node node:nodes){
-            if(!parents.contains(node.getParentNode())){
-                parents.add(node.getParentNode());
+        for(int i =0;i<nodes.size();i++){
+            if(!parents.contains(nodes.get(i).getParentNode())){
+                parents.add(nodes.get(i).getParentNode());
             }
         }
         nodes=parents;
-        return parents;
+        ArrayList<Node> ans = nodes;
+        return ans;
     }
 
     @Override
     public ArrayList<Node> visitSequenceOfPaths(XPathParser.SequenceOfPathsContext ctx) {
-        ArrayList<Node> temp = new ArrayList<>(nodes);
-        ArrayList<Node> left = new ArrayList<>(visit(ctx.relativePath(0)));
-        nodes= temp;
-        ArrayList<Node> right = new ArrayList<>(visit(ctx.relativePath(1)));
+        ArrayList<Node> old = nodes;
+        visit(ctx.relativePath(0));
+        ArrayList<Node> left = nodes;
+        nodes = old;
+        visit(ctx.relativePath(1));
+        ArrayList<Node> right = nodes;
         left.addAll(right);
-        nodes= left;
-        return left;
+        ArrayList<Node> ans = left;
+        nodes= ans;
+        return ans;
     }
 
     @Override
     public ArrayList<Node> visitTextFunction(XPathParser.TextFunctionContext ctx) {
-        ArrayList<Node> temp = new ArrayList<>();
+        /*ArrayList<Node> temp = new ArrayList<>();
         for(Node n:nodes){
             for(int i =0;i<n.getChildNodes().getLength();i++){
                 Node node=n.getChildNodes().item(i);
@@ -115,9 +134,14 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
                 }
             }
         }
-        return temp;
+        return temp;*/
+        ArrayList<Node> cList = new ArrayList<>();
+        for(Node child:nodes){
+            cList.addAll(getChildrenList(child));
+        }
+        nodes = cList;
+        return nodes;
     }
-<<<<<<< HEAD
     /*
         @Override
         public ArrayList<Node> visitText(XPathParser.TextContext ctx) {
@@ -146,7 +170,6 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
             return temp;
         }
     */
-=======
 /*
     @Override
     public ArrayList<Node> visitText(XPathParser.TextContext ctx) {
@@ -176,7 +199,6 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     }
 
 */
->>>>>>> 46ee878c59c1ceccaf4e9f43f89044b65e424b1b
     @Override
     public ArrayList<Node> visitSelf(XPathParser.SelfContext ctx) {
         return nodes;
@@ -198,48 +220,42 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
     @Override
     public ArrayList<Node> visitTag(XPathParser.TagContext ctx) {
         ArrayList<Node> res=new ArrayList<>();
-        String tagName=ctx.getText();
+        ArrayList<Node> cList = new ArrayList<>();
         for(Node node:nodes){
-            ArrayList<Node> tempChildren=getChildrenList(node);
-            for(Node child:tempChildren){
-                String nodeValue=child.getNodeName();
-                if(child.getNodeName().equals(tagName)) res.add(child);
+            cList.addAll(getChildrenList(node));
+        }
+        for(Node node:cList){
+            if(node.getNodeType()==Node.ELEMENT_NODE&&node.getNodeName().equals(ctx.getText())){
+                res.add(node);
             }
         }
         nodes=res;
-        return nodes;
+        return res;
 
     }
 
     @Override public ArrayList<Node> visitAttribute(XPathParser.AttributeContext ctx) {
         ArrayList<Node> res=new ArrayList<>();
-        String attrName=ctx.NAME().getText();
+        String attrName=ctx.attName().getText();
         for(Node node: nodes){
-            Element elm=(Element) node;
-            String attr=elm.getAttribute(attrName);
-            if(attr.length()!=0) res.add(node);
+            if(node.getNodeType()==Node.ELEMENT_NODE) {
+                Element elm = (Element) node;
+                String attr = elm.getAttribute(attrName);
+                if (attr.length() != 0) res.add(node);
+            }
         }
         nodes=res;
         return res;
     }
 
     @Override public ArrayList<Node> visitPathInParenthesis(XPathParser.PathInParenthesisContext ctx) { // ???
-        visit(ctx.relativePath());
-        return nodes;
+        return visit(ctx.relativePath());
     }
 
     @Override public ArrayList<Node> visitSelfOrdescendentPath(XPathParser.SelfOrdescendentPathContext ctx) {
         visit(ctx.relativePath(0));
-        ArrayList<Node> res= new ArrayList<>(nodes);
-        ArrayList<Node> aux= new ArrayList<>(nodes);
-        while(aux.size()!=0){
-            Node tmp=aux.get(0);
-            aux.remove(0);
-            ArrayList<Node> tmpChildren=getChildrenList(tmp);
-            res.addAll(tmpChildren);
-            aux.addAll(tmpChildren);
-        }
-        nodes=res;
+        ArrayList<Node> desc =getDescendants(nodes);
+        nodes.addAll(desc);
         return visit(ctx.relativePath(1));
     }
 
@@ -271,17 +287,15 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
         diff.addAll(left);
         diff.removeAll(right);
         ArrayList<Node> res = new ArrayList<Node>(diff);
-        nodes = res;
         return res;
     }
 
     @Override public ArrayList<Node> visitFirstFilter(XPathParser.FirstFilterContext ctx) {
-        visit(ctx.pathFilter());
-        return nodes;
+        return visit(ctx.pathFilter());
     }
 
     @Override public ArrayList<Node> visitPathWithFilter(XPathParser.PathWithFilterContext ctx){ //????
-        nodes = visit(ctx.relativePath());
+        visit(ctx.relativePath());
         nodes=visit(ctx.pathFilter());
         return nodes;
     }
@@ -315,8 +329,6 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
         intersect.addAll(f0);
         intersect.retainAll(f1);
         ArrayList<Node> res = new ArrayList<>(intersect);
-        nodes=res;
-
         return res;
     }
 
@@ -326,9 +338,7 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
         HashSet<Node> union = new HashSet<Node>();
         union.addAll(f0);
         union.addAll(f1);
-        f0.addAll(f1);
         ArrayList<Node> res = new ArrayList<Node>(union);
-        nodes = res;
         return res;
     }
 
@@ -360,5 +370,20 @@ public class XPathVisitorImplementation extends XPathBaseVisitor<ArrayList<Node>
         return res;
     }
 
+    @Override
+    public ArrayList<Node> visitRelativePathChildren(XPathParser.RelativePathChildrenContext ctx) {
+        visit(ctx.relativePath(0));
+        return visit(ctx.relativePath(1));
+    }
+
+    @Override
+    public ArrayList<Node> visitAttName(XPathParser.AttNameContext ctx) {
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public ArrayList<Node> visitTagName(XPathParser.TagNameContext ctx) {
+        return visitChildren(ctx);
+    }
 }
 
