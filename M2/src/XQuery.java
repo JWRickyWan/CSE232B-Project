@@ -26,7 +26,7 @@ public class XQuery {
         XQueryLexer lexer = new XQueryLexer(charStream);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         XQueryParser parser = new XQueryParser(tokens);
-        ParseTree tree = parser.absolutePath();
+        ParseTree tree = parser.xq();
         XQueryMyVisitor eval = new XQueryMyVisitor();
         ArrayList<Node> result = eval.visit(tree);
         Document outputDoc = null;

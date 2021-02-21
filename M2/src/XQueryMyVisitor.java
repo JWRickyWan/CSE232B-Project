@@ -53,7 +53,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     private void doClauses(int curVarIndex, XQueryParser.XQClausesContext ctx, ArrayList<Node> result){
         if(curVarIndex==ctx.forClause().var().size()){
-            HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(variables);
+            HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
             if(ctx.letClause()!=null) visit(ctx.letClause());
             if(ctx.whereClause()!=null){
                 visit(ctx.whereClause());
@@ -63,7 +63,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             }
             visit(ctx.returnClause());
             result.addAll(nodes);
-            variables=vars_cp;
+            map=vars_cp;
         }
         else{
             String varName=ctx.forClause().var(curVarIndex).getText();
@@ -71,7 +71,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             for(Node n:tmpNodes){
                 ArrayList<Node> tmp=new ArrayList<>();
                 tmp.add(n);
-                variables.put(varName,tmp);
+                map.put(varName,tmp);
                 doClauses(curVarIndex+1,ctx,result);
             }
         }
@@ -79,9 +79,9 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXQClauses(XQueryParser.XQClausesContext ctx) {  //lqh
         ArrayList<Node> result=new ArrayList<>();
-        HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(variables);
+        HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
         doClauses(0,ctx,result);
-        variables=vars_cp;
+        map=vars_cp;
         nodes=result;
         return nodes;
     }
@@ -97,10 +97,10 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitXQLet(XQueryParser.XQLetContext ctx) {  //lqh
-        HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(variables);
+        HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
         visit(ctx.letClause());
         visit(ctx.xq());
-        variables=vars_cp;
+        map=vars_cp;
         return nodes;
     }
 
@@ -120,7 +120,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitXQValue(XQueryParser.XQValueContext ctx) {  // lqh
         String var=ctx.var().getText();
         nodes=new ArrayList<>();
-        if(variables.containsKey(var)) nodes=variables.get(var);
+        if(map.containsKey(var)) nodes=map.get(var);
         return nodes;
     }
 

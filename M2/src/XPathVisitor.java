@@ -168,4 +168,16 @@ public interface XPathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPathIdEqual(XPathParser.PathIdEqualContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#tagName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTagName(XPathParser.TagNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link XPathParser#attName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAttName(XPathParser.AttNameContext ctx);
 }
