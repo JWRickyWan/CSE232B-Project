@@ -30,7 +30,6 @@ public class XQuery {
         XQueryMyVisitor eval = new XQueryMyVisitor();
         ArrayList<Node> result = eval.visit(tree);
         Document outputDoc = null;
-
         DocumentBuilderFactory docBF = DocumentBuilderFactory.newInstance();
         DocumentBuilder docB = null;
         try {

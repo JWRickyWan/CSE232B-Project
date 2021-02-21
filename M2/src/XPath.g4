@@ -1,28 +1,24 @@
 grammar XPath;
-NOT: 'not';
-EQUAL: '='|'eq';
-IDEQUAL:'=='|'is';
-NAME: [a-zA-Z0-9_-]+;
-FILE:NAME;
-doc: ('doc'|'document') '(' QUOTE filename QUOTE ')';
-filename:NAME('.' NAME)?;
+
 absolutePath:
-      doc SLASH relativePath  #absolutePathChild
-      |doc DOUBLESLASH relativePath  #DescendentAbsolutePath
+      doc '/' relativePath  #absolutePathChild
+      |doc '//' relativePath  #DescendentAbsolutePath
       ;
+doc: 'doc(' QUOTE filename QUOTE ')'
+    |'document(' QUOTE filename QUOTE ')';
 
 relativePath:
              tagName       #tag
-             |ASTRID         #all
-             |DOT           #self
-             |DDOT           #parentDirectory
+             |'*'         #all
+             |'.'         #self
+             |'..'          #parentDirectory
              |TEXTFUNC       #textFunction
             // |QUOTE NAME QUOTE #text
              |'@' attName     #attribute
              |relativePath','relativePath   #sequenceOfPaths
              |'('relativePath')' #pathInParenthesis
-             |relativePath SLASH relativePath #relativePathChildren
-             |relativePath DOUBLESLASH relativePath #selfOrdescendentPath
+             |relativePath '/' relativePath #relativePathChildren
+             |relativePath '//' relativePath #selfOrdescendentPath
              |relativePath'['pathFilter']'  #pathWithFilter
              ;
 
@@ -38,11 +34,11 @@ pathFilter:
            ;
 tagName:NAME;
 attName:NAME;
-SLASH:'/';
-DOUBLESLASH: '//';
-ASTRID:'*';
-DOT:'.';
-DDOT:'..';
+NOT: 'not';
+EQUAL: '='|'eq';
+IDEQUAL:'=='|'is';
+filename:NAME('.' NAME)?;
 TEXTFUNC:'text()';
-WS: [ \t\r\n]+ -> skip;
 QUOTE:'"'|'“'|'”';
+NAME: [a-zA-Z0-9_-]+;
+WS: [ \t\r\n]+ -> skip;

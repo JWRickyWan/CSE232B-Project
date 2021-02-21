@@ -32,13 +32,12 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitAbsolutePathChild(XQueryParser.AbsolutePathChildContext ctx) {
-        visit(ctx.doc());
-        return visit(ctx.relativePath());
+        return visitChildren(ctx);
     }
 
     @Override
     public ArrayList<Node> visitVar(XQueryParser.VarContext ctx) {
-        return super.visitVar(ctx);
+        return map.get(ctx.getText());
     }
 
     @Override
@@ -80,6 +79,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitXQClauses(XQueryParser.XQClausesContext ctx) {  //lqh
         ArrayList<Node> result=new ArrayList<>();
         HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
+        cStack.push(vars_cp);
         doClauses(0,ctx,result);
         map=vars_cp;
         nodes=result;
@@ -174,6 +174,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
                 map.put(ctx.var(x).getText(),val);
                 ans.add(N);
             }
+            return ans;
         }
         else{
             for(Node N:temp) {
@@ -185,8 +186,8 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
                 ans.addAll(ForClauseHelper(x + 1, ctx));
                 map = cStack.pop();
             }
+            return ans;
         }
-        return ans;
     }
     @Override
     public ArrayList<Node> visitForClause(XQueryParser.ForClauseContext ctx) {
@@ -236,21 +237,18 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitXQEqual(XQueryParser.XQEqualContext ctx) {
-        ArrayList<Node> temp = nodes;
-        ArrayList<Node> left = visit(ctx.xq(0));
-        nodes = temp;
-        ArrayList<Node> right = visit(ctx.xq(1));
-        nodes = temp;
-        ArrayList<Node> ans = new ArrayList<Node>();
-        for(Node i:left){
-            for(Node j:right){
-                if(i.isEqualNode(j)){
-                    ans.add(i);
-                    return ans;
+        ArrayList<Node> left = new ArrayList<>(visit(ctx.xq(0)));
+        ArrayList<Node> right = new ArrayList<>(visit(ctx.xq(1)));
+        ArrayList<Node> results = new ArrayList<>();
+
+        for (Node l: left)
+            for (Node r: right)
+                if (l.isEqualNode(r)) {
+                    Node n = document.createTextNode("T");
+                    results.add(n);
+                    return results;
                 }
-            }
-        }
-        return ans;
+        return results;
     }
 
     @Override
@@ -373,7 +371,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     }
     @Override
     public ArrayList<Node> visitFilename(XQueryParser.FilenameContext ctx) {
-        return super.visitFilename(ctx);
+        return visitChildren(ctx);
     }
     private ArrayList<Node> getNodes(Node n){
         ArrayList<Node> all = new ArrayList<>();
@@ -434,12 +432,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitTextFunction(XQueryParser.TextFunctionContext ctx) {
-        ArrayList<Node> cList = new ArrayList<>();
-        for(Node child:nodes){
-            cList.addAll(getChildrenList(child));
-        }
-        nodes = cList;
-        return nodes;
+        return visitChildren(ctx);
     }
 
     @Override
@@ -476,7 +469,18 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitTag(XQueryParser.TagContext ctx) {
-        return visitChildren(ctx);
+        ArrayList<Node> res=new ArrayList<>();
+        ArrayList<Node> cList = new ArrayList<>();
+        for(Node node:nodes){
+            cList.addAll(getChildrenList(node));
+        }
+        for(Node node:cList){
+            if(node.getNodeType()==Node.ELEMENT_NODE&&node.getNodeName().equals(ctx.getText())){
+                res.add(node);
+            }
+        }
+        nodes=res;
+        return res;
     }
 
     @Override
@@ -509,22 +513,22 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitPathTextEqual(XQueryParser.PathTextEqualContext ctx) {
-        HashSet<Node>  res = new HashSet<>();
+        HashSet<Node> res = new HashSet<>();
         ArrayList<Node> copy = nodes;
-        for(Node node: copy) {
+        for (Node node : copy) {
             ArrayList<Node> origin = new ArrayList<>();
             origin.add(node);
             nodes = origin;
             ArrayList<Node> left = visit(ctx.relativePath());
-            String text=ctx.NAME().getText();
+            String text = ctx.NAME().getText();
             for (Node l : left) {
-                String nodeValue=l.getNodeValue();
-                if (nodeValue!=null && nodeValue.equals(text)){
+                String nodeValue = l.getNodeValue();
+                if (nodeValue != null && nodeValue.equals(text)) {
                     res.add(node);
                 }
             }
         }
-        nodes = new ArrayList<>( res);
+        nodes = new ArrayList<>(res);
         return nodes;
     }
 
@@ -628,4 +632,5 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitAttName(XQueryParser.AttNameContext ctx) {
         return visitChildren(ctx);
     }
+
 }
