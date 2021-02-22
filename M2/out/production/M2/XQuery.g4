@@ -1,21 +1,48 @@
 grammar XQuery;
-import XPath;
-
-var : '$' NAME
-    ;
+absolutePath:
+      doc '/' relativePath  #absolutePathChild
+      |doc '//' relativePath  #DescendentAbsolutePath
+      ;
+doc: 'doc("' filename '")'
+    |'document("'filename'")';
+filename:NAME('.' NAME)?;
+relativePath:
+             tagName       #tag
+             |'*'         #all
+             |'.'         #self
+             |'..'          #parentDirectory
+             |TEXTFUNC       #textFunction
+            // |QUOTE NAME QUOTE #text
+             |'@' attName     #attribute
+             |relativePath','relativePath   #sequenceOfPaths
+             |'('relativePath')' #pathInParenthesis
+             |relativePath '/' relativePath #relativePathChildren
+             |relativePath '//' relativePath #selfOrdescendentPath
+             |relativePath'['pathFilter']'  #pathWithFilter
+             ;
+pathFilter:
+            relativePath     #relativePathFilter
+           |relativePath EQUAL relativePath  #pathValueEqual
+           |relativePath EQUAL QUOTE NAME QUOTE #pathTextEqual
+           |relativePath IDEQUAL relativePath    #pathIdEqual
+           |'('pathFilter')'     #firstFilter
+           |pathFilter 'and' pathFilter   #andpathFilter
+           |pathFilter 'or' pathFilter      #orpathFilter
+           |NOT pathFilter       #notFilter
+           ;
 xq
     : var                          # XQValue
-    | absolutePath                           # XQAbsolutePath
     | STRINGCONSTANT               # StringConstant
+    | absolutePath                           # XQAbsolutePath
     | '(' xq ')'                   # XQinParenthesis
-    | xq ',' xq                    # XQComma
     | xq '/' relativePath                    # XQChild
+    | xq ',' xq                    # XQComma
     | xq '//' relativePath                   # XQDescendent
     | '<' NAME '>' '{' xq '}' '</' NAME '>'   # XQNodeConstructor
     | forClause? letClause? whereClause? returnClause  # XQClauses
     | letClause xq                 # XQLet
     ;
-
+var : '$' NAME;
 forClause
     : 'for' var 'in' xq(',' var 'in' xq)*
     ;
@@ -27,7 +54,9 @@ letClause
 whereClause
     : 'where' cond
     ;
-
+returnClause
+    : 'return' xq
+    ;
 cond
     : xq EQUAL xq                     # XQEqual
     | xq IDEQUAL xq                    # XQIs
@@ -39,8 +68,16 @@ cond
     | 'not' cond                    # CondNot
     ;
 
-returnClause
-    : 'return' xq
-    ;
-
+tagName:NAME;
+attName:NAME;
+NOT: 'not';
+EQUAL: '='|'eq';
+IDEQUAL:'=='|'is';
+TEXTFUNC:'text()';
+QUOTE:'"'|'“'|'”';
+NAME: [a-zA-Z0-9_-]+;
+WS: [ \t\r\n]+ -> skip;
 STRINGCONSTANT: '"' [a-zA-Z0-9_,.;:'"?!@#$%^&*` \t\r\n-]* '"';
+
+
+

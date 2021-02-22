@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="M2:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/M2_jar</output-path>
+    <root id="archive" name="M2.jar">
+      <element id="module-output" name="M2" />
+      <element id="dir-copy" path="$PROJECT_DIR$" />
+      <element id="extracted-dir" path="/usr/local/lib/antlr-4.9.1-complete.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
