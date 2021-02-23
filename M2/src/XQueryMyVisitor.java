@@ -55,11 +55,12 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
             if(ctx.letClause()!=null) visit(ctx.letClause());
             if(ctx.whereClause()!=null){
-                visit(ctx.whereClause());
-                if(nodes.size()==0){
+                if(visit(ctx.whereClause()).size()<=0){
+                    map=vars_cp;
                     return;
                 }
             }
+
             visit(ctx.returnClause());
             result.addAll(nodes);
             map=vars_cp;
@@ -68,6 +69,9 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             String varName=ctx.forClause().var(curVarIndex).getText();
             ArrayList<Node> tmpNodes = visit(ctx.forClause().xq(curVarIndex));
             for(Node n:tmpNodes){
+                if(n.getNodeName()=="ACT" && tmpNodes.size()==5){
+                    Integer ahj=1;
+                }
                 ArrayList<Node> tmp=new ArrayList<>();
                 tmp.add(n);
                 map.put(varName,tmp);
@@ -79,7 +83,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitXQClauses(XQueryParser.XQClausesContext ctx) {  //lqh
         ArrayList<Node> result=new ArrayList<>();
         HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
-        cStack.push(vars_cp);
+        //cStack.push(vars_cp);
         doClauses(0,ctx,result);
         map=vars_cp;
         nodes=result;
@@ -106,7 +110,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitXQComma(XQueryParser.XQCommaContext ctx) {  //lqh
-        ArrayList<Node> nodes_cp=new ArrayList<>();
+        ArrayList<Node> nodes_cp=new ArrayList<>(nodes);
         visit(ctx.xq(0));
         ArrayList<Node> result=new ArrayList<>(nodes);
         nodes=nodes_cp;
@@ -124,6 +128,30 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
         return nodes;
     }
 
+    private boolean checkSelfAndChildrenSame(Node n1,Node n2){
+        String n1text=n1.getNodeName();
+        String n2text=n2.getNodeName();
+
+        HashSet<Integer> n2cs=new HashSet<Integer>();
+        if(!n1.getTextContent().equals(n2.getTextContent())) return false;
+        if(n1.getChildNodes().getLength()!=n2.getChildNodes().getLength()) return false;
+        for(int i=0;i<n1.getChildNodes().getLength();i++){
+            Node nc1=n1.getChildNodes().item(i);
+            boolean childSame=false;
+            for(int j=0;i<n2.getChildNodes().getLength();j++){
+                if(n2cs.contains(j)) continue;
+                Node nc2=n2.getChildNodes().item(j);
+                if(checkSelfAndChildrenSame(nc1,nc2)){
+                    n2cs.add(j);
+                    childSame=true;
+                    break;
+                }
+            }
+            if(!childSame) return false;
+        }
+        return true;
+    }
+
     @Override
     public ArrayList<Node> visitXQNodeConstructor(XQueryParser.XQNodeConstructorContext ctx) {  //lqh
         if(doc==null){
@@ -134,9 +162,25 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             }
         }
         ArrayList<Node> result=new ArrayList<>();
-        visit(ctx.xq());
+        ArrayList<Node> res_children= visit(ctx.xq());
+        // reduce result
+        ArrayList<Node> tmp_children=new ArrayList<>();
+        HashSet<Integer> removeIndex=new HashSet<>();
+        for(int i=0;i<res_children.size();i++){
+            if(removeIndex.contains(i)) continue;
+            for(int j=i+1;j<res_children.size();j++){
+                if(checkSelfAndChildrenSame(res_children.get(i),res_children.get(j))){
+                    removeIndex.add(j);
+
+                }
+            }
+            tmp_children.add(res_children.get(i));
+        }
+        res_children=tmp_children;
+        // reduce result end
         String name=ctx.NAME(0).getText();
-        result.add(makeElem(name,nodes));
+        Node cur=makeElem(name,res_children);
+        result.add(cur);
         nodes=result;
         return nodes;
     }
@@ -161,6 +205,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             }
         }
         nodes=result;
+        nodes=visit(ctx.relativePath());
         return nodes;
     }
 
@@ -237,8 +282,11 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitXQEqual(XQueryParser.XQEqualContext ctx) {
+        ArrayList<Node> tmp=nodes;
         ArrayList<Node> left = new ArrayList<>(visit(ctx.xq(0)));
+        nodes=tmp;
         ArrayList<Node> right = new ArrayList<>(visit(ctx.xq(1)));
+        nodes=tmp;
         ArrayList<Node> results = new ArrayList<>();
 
         for (Node l: left)
@@ -432,7 +480,15 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitTextFunction(XQueryParser.TextFunctionContext ctx) {
-        return visitChildren(ctx);
+        ArrayList<Node> result=new ArrayList<>();
+        for(Node n: nodes){
+            for(int i=0;i<n.getChildNodes().getLength();i++){
+                Node nc=n.getChildNodes().item(i);
+                if(nc.getNodeType()==Node.TEXT_NODE) result.add(nc);
+            }
+        }
+        nodes=result;
+        return nodes;
     }
 
     @Override
@@ -475,7 +531,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             cList.addAll(getChildrenList(node));
         }
         for(Node node:cList){
-            if(node.getNodeType()==Node.ELEMENT_NODE&&node.getNodeName().equals(ctx.getText())){
+            if(node.getNodeType()==Node.ELEMENT_NODE && node.getNodeName().equals(ctx.getText())){
                 res.add(node);
             }
         }
