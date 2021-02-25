@@ -15,7 +15,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     private ArrayList<Node> nodes =new ArrayList<>();
     private HashMap<String,ArrayList<Node>> map =  new HashMap<>();
     private Stack<HashMap<String,ArrayList<Node>>> cStack = new Stack<>();
-
+    
     private Node makeText(String textContent){
         return document.createTextNode(textContent);
     }
@@ -79,15 +79,13 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             }
         }
     }
-
-
     @Override
     public ArrayList<Node> visitXQClauses(XQueryParser.XQClausesContext ctx) {  //lqh
         ArrayList<Node> result=new ArrayList<>();
         HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
         //cStack.push(vars_cp);
         doClauses(0,ctx,result);
-        map=cStack.pop();
+        map=vars_cp;
         nodes=result;
         return nodes;
     }
@@ -97,16 +95,17 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
         String text=ctx.STRINGCONSTANT().getText();
         ArrayList<Node> result=new ArrayList<>();
         result.add(makeText(text.substring(1,text.length()-1)));
-        return result;
+        nodes=result;
+        return nodes;
     }
 
     @Override
     public ArrayList<Node> visitXQLet(XQueryParser.XQLetContext ctx) {  //lqh
         HashMap<String,ArrayList<Node>> vars_cp=new HashMap<>(map);
-        cStack.push(vars_cp);
-        ArrayList<Node> res = visitChildren(ctx);
-        map = cStack.pop();
-        return res;
+        visit(ctx.letClause());
+        visit(ctx.xq());
+        map=vars_cp;
+        return nodes;
     }
 
     @Override
@@ -220,6 +219,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
                 map.put(ctx.var(x).getText(),val);
                 ans.add(N);
             }
+            return ans;
         }
         else{
             for(Node N:temp) {
@@ -231,8 +231,8 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
                 ans.addAll(ForClauseHelper(x + 1, ctx));
                 map = cStack.pop();
             }
+            return ans;
         }
-        return ans;
     }
     @Override
     public ArrayList<Node> visitForClause(XQueryParser.ForClauseContext ctx) {
@@ -391,27 +391,26 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitDoc(XQueryParser.DocContext ctx) {
-        if(document==null){
-            File xmlFile = new File(ctx.filename().getText());
-            DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
-            docBuildFact.setIgnoringElementContentWhitespace(true);
-            DocumentBuilder DOC = null;
-            try {
-                DOC = docBuildFact.newDocumentBuilder();
-            } catch (ParserConfigurationException ParserError) {
-                ParserError.printStackTrace();
-            }
+        File xmlFile = new File(ctx.filename().getText());
+        DocumentBuilderFactory docBuildFact = DocumentBuilderFactory.newInstance();
+        docBuildFact.setIgnoringElementContentWhitespace(true);
+        DocumentBuilder DOC = null;
+        try {
+            DOC = docBuildFact.newDocumentBuilder();
+        } catch (ParserConfigurationException ParserError) {
+            ParserError.printStackTrace();
+        }
 
-            try {
-                if (DOC != null) {
-                    document = DOC.parse(xmlFile);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            if (DOC != null) {
+                document = DOC.parse(xmlFile);
             }
-
-        document.getDocumentElement().normalize();
-    }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (document!= null) {
+            document.getDocumentElement().normalize();
+        }
         ArrayList<Node> docs = new ArrayList<>();
         docs.add(document);
         nodes= docs;
