@@ -688,5 +688,4 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitAttName(XQueryParser.AttNameContext ctx) {
         return visitChildren(ctx);
     }
-
 }

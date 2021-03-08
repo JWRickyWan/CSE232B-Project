@@ -1,12 +1,21 @@
-import java.io.DataOutput;
-import java.io.File;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.util.*;
 
 public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     private Document document = null;
@@ -701,4 +710,70 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
         return visitChildren(ctx);
     }
 
+    @Override
+    public ArrayList<Node> visitJoinClause(XQueryParser.JoinClauseContext ctx) {
+        ArrayList<Node> left = visit(ctx.xq(0));
+        ArrayList<Node> right = visit(ctx.xq(1));
+        int size = ctx.attributePair(0).NAME().size();
+        String[] idLeft = new String[size];
+        String[] idRight = new String[size];
+        for(int i =0;i<size;i++){
+            idLeft[i]= ctx.attributePair(0).NAME(i).getText();
+            idRight[i] = ctx.attributePair(1).NAME(i).getText();
+        }
+        HashMap<String, ArrayList<Node>> HashLeft = joinLeft(left,idLeft);
+        ArrayList<Node> ans = joinRight(HashLeft,right,idRight);
+        return ans;
+    }
+    private HashMap joinLeft(ArrayList<Node> l, String[] Attributes){
+        HashMap<String,ArrayList<Node>> res = new HashMap<>();
+        String key = "";
+        for(Node n:l){
+            ArrayList<Node> child = getChildrenList(n);
+            for(String attribute:Attributes){
+                for(Node c: child){
+                    if(attribute.equals(c.getTextContent())){
+                        key+=c.getFirstChild().getTextContent();
+                    }
+                }
+            }
+            if(res.containsKey(key)){
+                res.get(key).add(n);
+            }
+            else{
+                ArrayList<Node> val = new ArrayList<>();
+                val.add(n);
+                res.put(key,val);
+            }
+        }
+        return res;
+    }
+    private ArrayList<Node> joinRight(HashMap<String,ArrayList<Node>> LeftMap, ArrayList<Node> right, String[] Attributes){
+        ArrayList<Node> res = new ArrayList<>();
+        for(Node n: right){
+            ArrayList<Node> child = getChildrenList(n);
+            String key = "";
+            for(String attribute: Attributes){
+                for(Node c:child){
+                    if(attribute.equals(c.getNodeName())){
+                        key+=c.getFirstChild().getTextContent();
+                    }
+                }
+            }
+            if(LeftMap.containsKey(key)){
+                ArrayList<Node> temp = new ArrayList<>();
+                for(Node node:LeftMap.get(key)){
+                    ArrayList<Node> newList  = getChildrenList(node);
+                    newList.addAll(getChildrenList(n));
+                    temp.add(makeElem("tuple",newList));
+                }
+                res.addAll(temp);
+            }
+        }
+        return res;
+    }
+    @Override
+    public ArrayList<Node> visitXQJoin(XQueryParser.XQJoinContext ctx) {
+        return visitChildren(ctx);
+    }
 }
