@@ -159,7 +159,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
         for(int i=0;i<n1.getChildNodes().getLength();i++){
             Node nc1=n1.getChildNodes().item(i);
             boolean childSame=false;
-            for(int j=0;i<n2.getChildNodes().getLength();j++){
+            for(int j=0;j<n2.getChildNodes().getLength();j++){
                 if(n2cs.contains(j)) continue;
                 Node nc2=n2.getChildNodes().item(j);
                 if(checkSelfAndChildrenSame(nc1,nc2)){
@@ -714,12 +714,12 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitJoinClause(XQueryParser.JoinClauseContext ctx) {
         ArrayList<Node> left = visit(ctx.xq(0));
         ArrayList<Node> right = visit(ctx.xq(1));
-        int size = ctx.attributePair(0).NAME().size();
+        int size = ctx.attributePair(0).id().size();
         String[] idLeft = new String[size];
         String[] idRight = new String[size];
         for(int i =0;i<size;i++){
-            idLeft[i]= ctx.attributePair(0).NAME(i).getText();
-            idRight[i] = ctx.attributePair(1).NAME(i).getText();
+            idLeft[i]= ctx.attributePair(0).id(i).getText();
+            idRight[i] = ctx.attributePair(1).id(i).getText();
         }
         HashMap<String, ArrayList<Node>> HashLeft = joinLeft(left,idLeft);
         ArrayList<Node> ans = joinRight(HashLeft,right,idRight);
@@ -732,10 +732,14 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             ArrayList<Node> child = getChildrenList(n);
             for(String attribute:Attributes){
                 for(Node c: child){
-                    if(attribute.equals(c.getTextContent())){
-                        key+=c.getFirstChild().getTextContent();
+                    String cText=c.getTextContent();
+                    if(attribute.equals(c.getNodeName())){
+                        key=c.getFirstChild().getTextContent();
                     }
                 }
+            }
+            if(key.equals("")){
+                continue;
             }
             if(res.containsKey(key)){
                 res.get(key).add(n);
