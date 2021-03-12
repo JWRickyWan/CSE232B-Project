@@ -1,4 +1,4 @@
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -165,7 +165,22 @@ public class XQueryRewriter {
         }
 
         rewritten_out += "return\n" + returnClause.toString()+"\n";
-
+        writeToFile("./rewrite.txt",rewritten_out);
         return rewritten_out;
+    }
+
+    private void writeToFile(String filePath, String content){
+        try {
+            File file=new File(filePath);
+            FileOutputStream fos=new FileOutputStream(file);
+            OutputStreamWriter osw=new OutputStreamWriter(fos);
+            Writer w=new BufferedWriter(osw);
+            w.write(content);
+            w.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
