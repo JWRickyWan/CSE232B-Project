@@ -1,4 +1,4 @@
-// Generated from XQuery.g4 by ANTLR 4.9.1
+// Generated from /Users/qihongliu/Desktop/ucsd/Winter2021/CSE232B/project/Code/M2_LQH/src/main/java/XQuery.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -596,4 +596,14 @@ public interface XQueryListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAttributePair(XQueryParser.AttributePairContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link XQueryParser#id}.
+	 * @param ctx the parse tree
+	 */
+	void enterId(XQueryParser.IdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link XQueryParser#id}.
+	 * @param ctx the parse tree
+	 */
+	void exitId(XQueryParser.IdContext ctx);
 }

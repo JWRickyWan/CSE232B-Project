@@ -1,4 +1,4 @@
-// Generated from XQuery.g4 by ANTLR 4.9.1
+// Generated from /Users/qihongliu/Desktop/ucsd/Winter2021/CSE232B/project/Code/M2_LQH/src/main/java/XQuery.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -367,4 +367,11 @@ public class XQueryBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitAttributePair(XQueryParser.AttributePairContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitId(XQueryParser.IdContext ctx) { return visitChildren(ctx); }
 }

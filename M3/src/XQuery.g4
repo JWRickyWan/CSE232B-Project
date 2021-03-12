@@ -79,5 +79,6 @@ QUOTE:'"'|'“'|'”';
 NAME: [a-zA-Z0-9_-]+;
 WS: [ \t\r\n]+ -> skip;
 STRINGCONSTANT: '"' [a-zA-Z0-9_,.;:'"?!@#$%^&*` \t\r\n-]* '"';
-ID:NAME;
-attributePair:'[' ID(',' ID)* ']';
+attributePair:'[' id(',' id)* ']';
+id:NAME;
+

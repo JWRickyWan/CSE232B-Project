@@ -17,7 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 
 public class XQuery {
     public static void main(String[] args) throws IOException {
-        String inputFile = "./input.xml";
+        String inputFile = "./src/main/java/input.xml";
         StringBuilder sb = new StringBuilder();
         InputStream is = System.in;
         if (inputFile!=null) is = new FileInputStream(inputFile);
