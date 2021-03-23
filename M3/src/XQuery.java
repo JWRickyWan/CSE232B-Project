@@ -17,7 +17,7 @@ import javax.xml.transform.stream.StreamResult;
 
 public class XQuery {
     public static void main(String[] args) throws IOException {
-        String inputFile = "./input.xml";
+        String inputFile = "./src/main/java/input2.xml";
         StringBuilder sb = new StringBuilder();
         InputStream is = System.in;
         if (inputFile!=null) is = new FileInputStream(inputFile);
@@ -29,29 +29,12 @@ public class XQuery {
         ParseTree tree = parser.xq();
         XQueryMyVisitor eval = new XQueryMyVisitor();
         ArrayList<Node> result = eval.visit(tree);
-        Document outputDoc = null;
-        DocumentBuilderFactory docBF = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docB = null;
-        try {
-            docB = docBF.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        outputDoc = docB.newDocument();
 
-        ArrayList<Node> finalResult = makeElem(eval.doc, "result", result);
-        writeToFile(outputDoc, finalResult, "XQuery_output.xml");
+        //ArrayList<Node> finalResult = makeElem(eval.doc, "result", result);
+        writeToFile(result, "XQuery_output.xml");
 
         System.out.println("finalResult size: " + result.size());
-//        for(Node n:finalResult) {
-//            System.out.println(n.getNodeName());
-//            System.out.println(n.getNodeValue());
-//            System.out.println(n.getFirstChild().getNodeName());
-//            System.out.println(n.getFirstChild().getNodeValue());
-//            //System.out.println(n.getFirstChild().getFirstChild().getNodeValue());
-//            //System.out.println(n.getNextSibling().getNextSibling().getNodeName());
-//            System.out.println();
-//        }
+
     }
 
     public static ArrayList<Node> evalRewrite(String rewrittenInput){
@@ -75,20 +58,35 @@ public class XQuery {
         return null;
     }
 
-    private static void writeToFile(Document doc, ArrayList<Node> result, String filePath) {
-        Node newNode = doc.importNode(result.get(0), true);
-        doc.appendChild(newNode);
-        try {
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-            DOMSource source = new DOMSource(doc);
-            StreamResult res = new StreamResult(filePath);
-            transformer.transform(source, res);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void writeToFile(ArrayList<Node> result, String filePath) {
+        for(int i=0;i<result.size();i++) {
+            Document outputDoc = null;
+            DocumentBuilderFactory docBF = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docB = null;
+            try {
+                docB = docBF.newDocumentBuilder();
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            }
+            outputDoc = docB.newDocument();
+
+            Node newNode = outputDoc.importNode(result.get(i), true);
+            outputDoc.appendChild(newNode);
+
+            try {
+                TransformerFactory factory = TransformerFactory.newInstance();
+                Transformer transformer = factory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+                DOMSource source = new DOMSource(outputDoc);
+                StreamResult res = new StreamResult(filePath);
+                transformer.transform(source, res);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
+
     }
 
     private static ArrayList<Node> makeElem(Document doc, String tag, ArrayList<Node> list){

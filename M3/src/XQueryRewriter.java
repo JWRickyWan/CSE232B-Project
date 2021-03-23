@@ -106,7 +106,7 @@ public class XQueryRewriter {
                     rewritten_out+=equals[j][0] + " eq " + equals[j][1] +"\n";
                 }
             }
-            rewritten_out += "return <tuple>" + tuples + "</tuple>, \n";
+            rewritten_out += "return <tuple>{" + tuples + "}</tuple>, \n";
 
             if(i != 0) {
                 LinkedList<String> left = new LinkedList<>();
