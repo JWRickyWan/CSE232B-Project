@@ -77,9 +77,6 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             String varName=ctx.forClause().var(curVarIndex).getText();
             ArrayList<Node> tmpNodes = visit(ctx.forClause().xq(curVarIndex));
             for(Node n:tmpNodes){
-                if(n.getNodeName()=="ACT" && tmpNodes.size()==5){
-                    Integer ahj=1;
-                }
                 ArrayList<Node> tmp=new ArrayList<>();
                 tmp.add(n);
                 map.put(varName,tmp);
@@ -185,6 +182,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> result=new ArrayList<>();
         ArrayList<Node> res_children= visit(ctx.xq());
         // reduce result
+        /*
         ArrayList<Node> tmp_children=new ArrayList<>();
         HashSet<Integer> removeIndex=new HashSet<>();
         for(int i=0;i<res_children.size();i++){
@@ -198,6 +196,7 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
             tmp_children.add(res_children.get(i));
         }
         res_children=tmp_children;
+         */
         // reduce result end
         String name=ctx.NAME(0).getText();
         Node cur=makeElem(name,res_children);
@@ -727,14 +726,14 @@ public class XQueryMyVisitor extends XQueryBaseVisitor<ArrayList<Node>>{
     }
     private HashMap joinLeft(ArrayList<Node> l, String[] Attributes){
         HashMap<String,ArrayList<Node>> res = new HashMap<>();
-        String key = "";
         for(Node n:l){
             ArrayList<Node> child = getChildrenList(n);
+            String key = "";
             for(String attribute:Attributes){
                 for(Node c: child){
                     String cText=c.getTextContent();
                     if(attribute.equals(c.getNodeName())){
-                        key=c.getFirstChild().getTextContent();
+                        key+=c.getFirstChild().getTextContent();
                     }
                 }
             }
